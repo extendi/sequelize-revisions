@@ -88,7 +88,7 @@ module.exports = function(sequelize, options){
             // Hacky, but necessary to get immutable current representation
             document: JSON.parse(JSON.stringify(currentVersion)),
             // Get user from instance.context, hacky workaround, any better idea?
-            userId: options.userModel && user ? user.id : null
+            userId: options.userModel && user ? user.username() : null
          });
 
          // Save revision
@@ -193,10 +193,6 @@ var getDifferences = function(current, next, exclude){
    var diffs = di ? di.map(function(i){
       var str = JSON.stringify(i).replace("\"__data\",", "");
       return JSON.parse(str);
-   }).filter(function(i){
-      return i.path.join(",").indexOf("_") === -1;
-   }).filter(function(i){
-      return exclude.every(function(x){return i.path.indexOf(x) === -1; });
    }) : [];
    if(diffs.length > 0){
       return diffs;
