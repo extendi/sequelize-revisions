@@ -193,6 +193,18 @@ var getDifferences = function(current, next, exclude){
    var diffs = di ? di.map(function(i){
       var str = JSON.stringify(i).replace("\"__data\",", "");
       return JSON.parse(str);
+   }).filter(function (i) {
+     if (i.kind === 'E') {
+       if (i.lhs != i.rhs) {
+         return i;
+       }
+     } else {
+       return i;
+     }
+   }).filter(function (i) {
+     return exclude.every(function (x) {
+       return i.path.indexOf(x) === -1;
+     });
    }) : [];
    if(diffs.length > 0){
       return diffs;
